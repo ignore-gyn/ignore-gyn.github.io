@@ -1,1 +1,0 @@
-# ignore-gyn.github.io

@@ -1,0 +1,11 @@
+{
+    "name": "ShizimilyRogue",
+    "version": "1.0.1",
+    "description": "",
+    "main": "main.js",
+    "window": {
+        "width": 1300,
+        "height": 740,
+        "title": "しじみりちゃんは帰れませんでした"
+    }
+}
