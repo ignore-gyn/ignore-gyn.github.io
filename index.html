@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <title>LM</title>
-    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <link rel="stylesheet" href="css/style.css">
 
     <script src="./js/pixi/pixi.min.js"></script>
 
@@ -23,18 +23,7 @@
 </head>
 
 <body>
-    <!-- <div id="container">
-        <canvas id="world"></canvas>
-    </div> -->
-    <script type="text/javascript">
-        let type = "WebGL"
-        if(!PIXI.utils.isWebGLSupported()){
-          type = "canvas"
-        }
-    
-        PIXI.utils.sayHello(type)
-      </script>
-
+    <div class="stage" id="stage"></div>
 </body>
-
+<style type="text/css">   CANVAS{image-rendering: pixelated;}</style>
 </html>

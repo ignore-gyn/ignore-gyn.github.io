@@ -1,57 +1,112 @@
 /*global PIXI*/
-// let type = "WebGL"
-// if(!PIXI.utils.isWebGLSupported()){
-//   type = "canvas"
-// }
+let type = "WebGL"
+if(!PIXI.utils.isWebGLSupported()){
+    type = "canvas"
+}
 
-// PIXI.utils.sayHello(type)
+PIXI.utils.sayHello(type)
 
-var width = 640;    // 描画エリアのサイズ
-    var height = 880;
-    var params = {
-        backgroundColor: 0xa0a0a0   // 背景色の指定（灰色）
+/**
+ * Initialize container and renderer
+ */
+let stage = new PIXI.Container();
+let chara_container = new PIXI.Container();
+let renderer = PIXI.autoDetectRenderer(800, 600, {
+    antialias: false,
+    backgroundColor: 0x00ffd4,
+    // transparent: true
+});
+
+/**
+ * Initialize texture
+ */
+const CHARA_DIR = {
+    FRONT: 0,
+    LEFT: 1,
+    RIGHT: 2,
+    BACK: 3
+};
+let loader = new PIXI.loaders.Loader();
+loader
+    .add("sprite", "./image/walk_base_x2.json")
+    .once('complete', function(){
+
+    let txt_walk_base = [];
+    let anm_walk_base = [];
+
+    for (let i = 0; i < 4; i++) {
+        txt_walk_base[i] = [];
+        for (let j = 0; j < 4; j++) {
+            txt_walk_base[i].push(PIXI.Texture.fromFrame("walk_base_" + i + "_" + (j === 3 ? 1 : j)));
+        }
+
+        anm_walk_base.push(new PIXI.extras.AnimatedSprite(txt_walk_base[i]));
+        anm_walk_base[i].play();
+        anm_walk_base[i].animationSpeed = 0.1;
+        // anm_walk_base[i].position.set(150*(i+1), 150);
+        anm_walk_base[i].position.set(150, 150);
+        anm_walk_base[i].visible = false;
+        chara_container.addChild(anm_walk_base[i]);
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    
+    let cur_anm_spr = anm_walk_base[0];
+
+    function handleKeyDown(e){
+        let key = e.key;
+        let k;
+        /**
+         * キーボードの矢印キーに対応したテクスチャに変更
+         */
+        switch (key) {
+
+            case 'ArrowLeft':
+            console.log('left');
+            k = CHARA_DIR.LEFT;
+            break;
+
+            case 'ArrowUp':
+            console.log('up');
+            k = CHARA_DIR.BACK;
+            break;
+
+            case 'ArrowRight':
+            console.log('right');
+            k = CHARA_DIR.RIGHT;
+            break;
+
+            case 'ArrowDown':
+            console.log('down');
+            k = CHARA_DIR.FRONT;
+            break;
+
+            default:
+            k = -1;
+            break;
+        }
+
+        if (k >= 0) {
+            cur_anm_spr.visible = false;
+            anm_walk_base[k].visible = true;
+            cur_anm_spr = anm_walk_base[k];
+        }
+    }
+});
+
+/**
+ * Start
+ */
+window.onload = () => {
+    document.getElementById("stage").appendChild(renderer.view);
+               
+    let animation = function(){
+        requestAnimationFrame(animation);   // animation関数の再帰呼び出し...こうやるもんなのか？
+        renderer.render(stage);
+        renderer.render(chara_container);
     };
-    var renderer = PIXI.autoDetectRenderer(width, height, params);  // レンダラー生成
-
-    // DOM操作にjQueryを使用するので事前に読み込んでおくこと
-    $("body").append(renderer.view);    // DOMにレンダラーのビューを追加
-
-    var stage = new PIXI.Container();   // ステージを生成
-    renderer.render(stage);     // レンダラーにステージを描画させる
-
-
-// var game = game || {};
-
-// const app = new PIXI.Application();
-
-// /**
-//  * Play the animation.
-//  * @param {String} name Animation name
-//  */
-// // The application will create a canvas element for you that you
-// // can then insert into the DOM
-// document.body.appendChild(app.view);
-
-// // load the texture we need
-// PIXI.Loader.shared.add('battlechara_base', 'battlechara_base.png').load((loader, resources) => {
-//     // This creates a texture from a 'bunny.png' image
-//     const chara_base = new PIXI.Sprite(resources.bunny.texture);
-
-//     // Setup the position of the bunny
-//     chara_base.x = app.renderer.width / 2;
-//     chara_base.y = app.renderer.height / 2;
-
-//     // Rotate around the center
-//     chara_base.anchor.x = 0.5;
-//     chara_base.anchor.y = 0.5;
-
-//     // Add the bunny to the scene we are building
-//     app.stage.addChild(bunny);
-
-//     // Listen for frame updates
-//     app.ticker.add(() => {
-//          // each frame we spin the bunny around a bit
-//         bunny.rotation += 0.01;
-//     });
-// });
+    
+    loader.load();
+    animation();
+};
 
