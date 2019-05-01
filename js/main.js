@@ -9,14 +9,21 @@ PIXI.utils.sayHello(type)
 /**
  * Initialize container and renderer
  */
-let stage = new PIXI.Container();
-let chara_container = new PIXI.Container();
-let renderer = PIXI.autoDetectRenderer(800, 600, {
+let app = new PIXI.Application(640, 480, {
     antialias: false,
     backgroundColor: 0x00ffd4,
     // transparent: true
 });
+// let stage = new PIXI.Container();
+let chara_container = new PIXI.Container();
+// let renderer = PIXI.autoDetectRenderer(800, 600, {
+//     antialias: false,
+//     backgroundColor: 0x00ffd4,
+//     // transparent: true
+// });
 
+
+  
 /**
  * Initialize texture
  */
@@ -52,6 +59,7 @@ loader
     document.addEventListener('keydown', handleKeyDown);
     
     let cur_anm_spr = anm_walk_base[0];
+    anm_walk_base[0].visible = true
 
     function handleKeyDown(e){
         let key = e.key;
@@ -60,7 +68,6 @@ loader
          * キーボードの矢印キーに対応したテクスチャに変更
          */
         switch (key) {
-
             case 'ArrowLeft':
             console.log('left');
             k = CHARA_DIR.LEFT;
@@ -98,15 +105,19 @@ loader
  * Start
  */
 window.onload = () => {
-    document.getElementById("stage").appendChild(renderer.view);
-               
-    let animation = function(){
-        requestAnimationFrame(animation);   // animation関数の再帰呼び出し...こうやるもんなのか？
-        renderer.render(stage);
-        renderer.render(chara_container);
-    };
-    
+    document.body.appendChild(app.view);
+    // document.getElementById("stage").appendChild(renderer.view);
     loader.load();
-    animation();
+    app.stage.addChild(chara_container);
+               
+    // let animation = function(){
+    //     requestAnimationFrame(animation);   // animation関数の再帰呼び出し...こうやるもんなのか？
+    //     // renderer.render(stage);
+    //     // renderer.render(chara_container);
+    // };
+    
+    // loader.load();
+    // animation();
+    app.start();
 };
 
